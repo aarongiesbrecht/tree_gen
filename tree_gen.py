@@ -1,9 +1,9 @@
 #
 # a simple forest generation applet
-# intended to be a class 1 totallistic
-# cellular automata
+# intended to showcase the different
+# classess of celular automata
 # 
-# not intended to be good
+# not intended to actually be efficient
 #
 
 #base gui library
@@ -11,6 +11,10 @@ from tkinter import *
 #helper gui libraries
 from PIL import Image
 from PIL import ImageTk
+#utils
+from random import randint
+#local tools
+import generation
 
 
 #main window is generated from tkinters default frame data
@@ -34,13 +38,30 @@ class Window(Frame):
         file.add_command(label='close and exit', command=self.shutdown)
         menu.add_cascade(label='File', menu=file)
         
-        #left as comment for reference
-        #Label(text='pass').grid(row=0, column=0)
+        #generation menu
+        gen=Menu(menu)
+        gen.add_command(label='fresh generation', command=self.createNewGeneration)
+        menu.add_cascade(label='Generation', menu=gen)
+        
+        #evolution menu
+        evo=Menu(menu)
+        evo.add_command(label='class 1', command=self.evolution(1))  
+        menu.add_cascade(label='Evolution', menu=evo)      
+     
+    def evolution(self, i):
+        if(i==1):
+            generation.evolve            
+     
+    #generates a new map based on given paramaters    (paramaters not yet implimented)   
+    def createNewGeneration(self):
         for x in range(0,20):
             for y in range(0,20):
-                Label(text='X').grid(row=y, column=x, ipadx=4)
-        
-        
+                r=randint(0,1)
+                if(r==0):
+                    Label(text='#').grid(row=y, column=x, ipadx=4)
+                elif(r==1):
+                    Label(text='.').grid(row=y, column=x, ipadx=4)
+          
 
     def displayImg(self, i, x, y):
       load=Image.open(i)

@@ -14,8 +14,40 @@ from PIL import ImageTk
 #utils
 from random import randint
 #local tools
+import evolution
 import generation
 
+
+#tile class
+class Tile():
+    def __init__(self, row, col, data):
+        self.row=row
+        self.col=col
+        self.data=data
+    def getRow(self):
+        return self.row
+    def getCol(self):
+        return self.col
+    def getData(self):
+        return self.data
+    def update(self, data):
+        self.data=data
+            
+
+#a tile managing class
+class Map:
+    def __init__(self, rows, cols):
+        self.rows=rows
+        self.cols=cols
+        self._map=[]
+    
+        #build map
+        for row in range(self.rows):
+            self._map.append([])
+            for col in range(self.cols):
+                t=Tile(row, col, '')
+                self._map[row].append(t)
+            
 
 #main window is generated from tkinters default frame data
 class Window(Frame):
@@ -45,22 +77,34 @@ class Window(Frame):
         
         #evolution menu
         evo=Menu(menu)
-        evo.add_command(label='class 1', command=self.evolution(1))  
+        evo.add_command(label='class 1', command=self.evolveOne)  
         menu.add_cascade(label='Evolution', menu=evo)      
      
-    def evolution(self, i):
-        if(i==1):
-            generation.evolve            
+    def evolveOne(self):
+        Label(text='pass').grid(row=0, column=0, ipadx=4)
+        evolution.classOne            
      
     #generates a new map based on given paramaters    (paramaters not yet implimented)   
     def createNewGeneration(self):
-        for x in range(0,20):
-            for y in range(0,20):
+        map=Map(15,15)
+        for row in range(0,14):
+            for col in range(0,14):
                 r=randint(0,1)
-                if(r==0):
-                    Label(text='#').grid(row=y, column=x, ipadx=4)
-                elif(r==1):
-                    Label(text='.').grid(row=y, column=x, ipadx=4)
+                if(r == 0):
+                    return 0
+                else:
+                    return 0
+        
+        
+        
+        
+    #    for x in range(0,20):
+    #        for y in range(0,20):
+    #            r=randint(0,1)
+    #            if(r==0):
+    #                Label(text='#').grid(row=y, column=x, ipadx=4)
+    #            elif(r==1):
+    #                Label(text='.').grid(row=y, column=x, ipadx=4)
           
 
     def displayImg(self, i, x, y):

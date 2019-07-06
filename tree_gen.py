@@ -14,8 +14,10 @@ from PIL import ImageTk
 #utils
 from random import randint
 #local tools
-import evolution
-import generation
+from cOne import evoOne
+#import cTwo
+#import cThree
+#import cFour
 
 
 #tile class
@@ -90,10 +92,11 @@ class Window(Frame):
      
     #class one evolution, can be run multiple times
     def evolveOne(self):
-        evolution.classOne(map, map.getTile(5,5))
+        evoOne(map, map.getTile(5,5))
         map.update(5,5,'X')
         map.getData(5,5).grid(row=5, column=5, ipadx=5)      
-     
+        
+        
     #generates a new map based on given paramaters    (paramaters not yet implimented)   
     def createNewGeneration(self):
         for row in range(0,14):

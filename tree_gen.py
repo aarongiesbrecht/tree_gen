@@ -32,11 +32,11 @@ class Tile():
     #used by map to manage per tile data
     def getStr(self):  
         if (self.data == 0):
-            self.strData = '0'
-            self.color = 'green'
+            self.strData = ' '
+            self.color = 'forest green'
         elif (self.data == 1):
-            self.strData = '1'
-            self.color = 'blue'
+            self.strData = ' '
+            self.color = 'skyblue1'
         return Label(text=self.strData, bg=self.color, width=2, height=1)
     def getData(self):
         return self.data
@@ -82,11 +82,14 @@ class Window(Frame):
         #master refers to main window
         self.master = master
         self.initWindow()
+        
 
     def initWindow(self):
         #sizing and title
         self.master.title('Tree Gen')
-        
+        self.displayText('Tree Gen')
+        self.l = Label(text='Generate a fresh map', bg='grey30', fg='grey20', font=('helvetica', 30, 'bold'))
+        self.l.pack(expand=True)
         #base menu
         menu=Menu(self.master)
         self.master.config(menu=menu)
@@ -146,6 +149,7 @@ class Window(Frame):
         
     #generates a new map based on given paramaters    (paramaters not yet implimented)   
     def createNewGeneration(self):
+        self.l.destroy()
         for row in range(30):
             for col in range(30):
                 r=randint(0,1)
@@ -166,8 +170,9 @@ class Window(Frame):
       img.place(x=x, y=y)  
       
     #displays text i (only to be used to test if app has crashed)
-    def displayText(self, i):
-        text=Label(self, text=i)
+    def displayText(self, t):
+        text=Label(self, text=t)
+        text.place(x=300, y=300)
         text.pack()
         
     #this uh.. yeah
@@ -180,7 +185,9 @@ from flood import floodEvo
 from drought import droughtEvo
 
 root=Tk()
-root.geometry("600x630")
+root.geometry('600x630')
+root.configure(bg='gray30')
+
 app=Window(root)
 root.mainloop()
 

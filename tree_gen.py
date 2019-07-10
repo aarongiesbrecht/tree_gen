@@ -24,6 +24,7 @@ class Tile():
         self.color = 'black'
         self.data=data
         self.newData=0
+        self.oldData=0
     #return tile coords
     def getX(self):
         return self.row
@@ -44,7 +45,10 @@ class Tile():
     def dataCommit(self, data):
         self.newData=data
     def dataPush(self):
-        self.data=self.newData            
+        self.oldData=self.data
+        self.data=self.newData
+    def oldCommit(self):
+        self.newData=self.oldData            
 
 #a tile managing class
 class Map:
@@ -87,7 +91,6 @@ class Window(Frame):
     def initWindow(self):
         #sizing and title
         self.master.title('Tree Gen')
-        self.displayText('Tree Gen')
         self.l = Label(text='Generate a fresh map', bg='grey30', fg='grey20', font=('helvetica', 30, 'bold'))
         self.l.pack(expand=True)
         #base menu
@@ -96,19 +99,20 @@ class Window(Frame):
         
         #file menu creation
         file=Menu(menu)
-        file.add_command(label='close and exit', command=self.shutdown)
+        file.add_command(label='Close and Exit', command=self.shutdown)
         menu.add_cascade(label='File', menu=file)
         
         #generation menu
         gen=Menu(menu)
-        gen.add_command(label='fresh generation', command=self.createNewGeneration)
+        gen.add_command(label='Fresh Generation', command=self.createNewGeneration)
         menu.add_cascade(label='Generation', menu=gen)
         
         #evolution menu
         evo=Menu(menu)
-        evo.add_command(label='smooth', command=self.smooth)  
-        evo.add_command(label='flood', command=self.flood)  
-        evo.add_command(label='drought', command=self.drought)
+        evo.add_command(label='Smooth', command=self.smooth)  
+        evo.add_command(label='Flood', command=self.flood)  
+        evo.add_command(label='Drought', command=self.drought)
+        evo.add_command(label='Undo', command=self.undo)
         menu.add_cascade(label='Evolution', menu=evo) 
         
    
@@ -146,7 +150,14 @@ class Window(Frame):
             for col in range(30):
                 map.getTile(row, col).dataPush()
                 map.getStr(row, col).grid(row=row, column=col)
-        
+    
+    def undo(self):
+        for row in range(30):
+            for col in range(30):
+                map.getTile(row, col).oldCommit()
+                map.getTile(row, col).dataPush()
+                map.getStr(row, col).grid(row=row, column=col)
+            
     #generates a new map based on given paramaters    (paramaters not yet implimented)   
     def createNewGeneration(self):
         self.l.destroy()
@@ -160,21 +171,7 @@ class Window(Frame):
                     map.update(row, col, 1)
                     map.getStr(row, col).grid(row=row, column=col)
  
-     
-    #displays an img 'i' at x/y    
-    def displayImg(self, i, x, y):
-      load=Image.open(i)
-      render=ImageTk.PhotoImage(load)
-      img=Label(self, image=render)
-      img.image=render
-      img.place(x=x, y=y)  
-      
-    #displays text i (only to be used to test if app has crashed)
-    def displayText(self, t):
-        text=Label(self, text=t)
-        text.place(x=300, y=300)
-        text.pack()
-        
+
     #this uh.. yeah
     def shutdown(self):
         exit()

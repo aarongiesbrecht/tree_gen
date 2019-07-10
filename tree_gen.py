@@ -19,6 +19,8 @@ from cOne import evoOne
 #import cThree
 #import cFour
 
+root=Tk()
+root.geometry("600x630")
 
 #tile class
 class Tile():
@@ -26,6 +28,7 @@ class Tile():
         self.row=row
         self.col=col
         self.strData = ''
+        self.color = 'black'
         self.data=data
         self.newData=0
     #return tile coords
@@ -36,10 +39,12 @@ class Tile():
     #used by map to manage per tile data
     def getStr(self):  
         if (self.data == 0):
-            self.strData = '#'
+            self.strData = '0'
+            self.color = 'green'
         elif (self.data == 1):
-            self.strData = '.'
-        return Label(text=self.strData)
+            self.strData = '1'
+            self.color = 'blue'
+        return Label(text=self.strData, bg=self.color, width=2, height=1)
     def getData(self):
         return self.data
     #partner to above method
@@ -118,7 +123,7 @@ class Window(Frame):
         for row in range(30):
             for col in range(30):
                 map.getTile(row, col).dataPush()
-                map.getStr(row, col).grid(row=row, column=col, ipadx=5)
+                map.getStr(row, col).grid(row=row, column=col)
          
         
     #generates a new map based on given paramaters    (paramaters not yet implimented)   
@@ -128,10 +133,10 @@ class Window(Frame):
                 r=randint(0,1)
                 if(r == 0):
                     map.update(row, col, 0)
-                    map.getStr(row, col).grid(row=row, column=col, ipadx=5)
+                    map.getStr(row, col).grid(row=row, column=col)
                 else:
                     map.update(row, col, 1)
-                    map.getStr(row, col).grid(row=row, column=col, ipadx=5)
+                    map.getStr(row, col).grid(row=row, column=col)
  
      
     #displays an img 'i' at x/y    
@@ -151,8 +156,7 @@ class Window(Frame):
     def shutdown(self):
         exit()
 
-root=Tk()
-root.geometry("690x630")
+
 app=Window(root)
 root.mainloop()
 

@@ -13,14 +13,7 @@ from PIL import Image
 from PIL import ImageTk
 #utils
 from random import randint
-#local tools
-from cOne import evoOne
-#import cTwo
-#import cThree
-#import cFour
 
-root=Tk()
-root.geometry("600x630")
 
 #tile class
 class Tile():
@@ -110,21 +103,46 @@ class Window(Frame):
         
         #evolution menu
         evo=Menu(menu)
-        evo.add_command(label='class 1', command=self.evolveOne)  
-        menu.add_cascade(label='Evolution', menu=evo)      
+        evo.add_command(label='smooth', command=self.smooth)  
+        evo.add_command(label='flood', command=self.flood)  
+        evo.add_command(label='drought', command=self.drought)
+        menu.add_cascade(label='Evolution', menu=evo) 
+        
+   
      
     #class one evolution, can be run multiple times
-    def evolveOne(self):
+    def smooth(self):
         #run an evolve check on all tiles
         for row in range(30):
             for col in range(30):
-                evoOne(map, map.getTile(row, col))
+                smoothEvo(map, map.getTile(row, col))
+        #update all tiles and reprint
+        for row in range(30):
+            for col in range(30):
+                map.getTile(row, col).dataPush()
+                map.getStr(row, col).grid(row=row, column=col)
+                
+    def flood(self):
+        #run an evolve check on all tiles
+        for row in range(30):
+            for col in range(30):
+                floodEvo(map, map.getTile(row, col))
         #update all tiles and reprint
         for row in range(30):
             for col in range(30):
                 map.getTile(row, col).dataPush()
                 map.getStr(row, col).grid(row=row, column=col)
          
+    def drought(self):
+        #run an evolve check on all tiles
+        for row in range(30):
+            for col in range(30):
+                droughtEvo(map, map.getTile(row, col))
+        #update all tiles and reprint
+        for row in range(30):
+            for col in range(30):
+                map.getTile(row, col).dataPush()
+                map.getStr(row, col).grid(row=row, column=col)
         
     #generates a new map based on given paramaters    (paramaters not yet implimented)   
     def createNewGeneration(self):
@@ -156,7 +174,13 @@ class Window(Frame):
     def shutdown(self):
         exit()
 
+#local tools import last to avoid loops
+from smooth import smoothEvo
+from flood import floodEvo
+from drought import droughtEvo
 
+root=Tk()
+root.geometry("600x630")
 app=Window(root)
 root.mainloop()
 

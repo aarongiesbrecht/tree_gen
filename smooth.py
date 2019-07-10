@@ -1,10 +1,12 @@
 #
-# commits evolution data for tiles that
-# meet requirements based on neighboring
-# tiles data
-#
+# scans neighbors of provided tile
+# evolves tile based on the ratio of
+# neighboring tiles data creating a 
+# class one cellular automata
+# 
 
-def evoOne(map, tile):
+
+def smoothEvo(map, tile):
     tile.getData()
     x=tile.getX()
     y=tile.getY()
@@ -28,6 +30,7 @@ def evoOne(map, tile):
         tile.dataCommit(1)   
     if (landCounter > 5):
         tile.dataCommit(0)
+
 
 #imported after to avoid import loop that took me 10 long minutes to realize    
 from tree_gen import Tile, Map

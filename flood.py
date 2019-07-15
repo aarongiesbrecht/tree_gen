@@ -17,7 +17,7 @@ def floodEvo(map, tile):
         for col in range(y-1, y+2):
             #if a tile is on the edge of the map it will have a proportionally
             #lower evolution chance
-            if (0 < row <= 29 and 0 < col <= 29 and
+            if (0 < row <= 74 and 0 < col <= 74 and
                 (row != x or col != y)): #do not count the tile being evaluated
                     if (map.getData(row, col) == 1):
                         waterCounter += 1

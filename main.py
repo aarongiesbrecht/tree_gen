@@ -85,8 +85,12 @@ class Window(Frame):
         #generation menu
         gen=Menu(menu)
         gen.add_command(label='Fresh Generation', command=self.createNewGeneration)
+        gen.add_command(label='Clear Map', command=self.clearMap)
         menu.add_cascade(label='Generation', menu=gen)
-        
+
+#------------------------------------------------------------------------------
+#utilities
+    
     #updates a tiles data and reprints
     def updateTile(self, row, col, data):
         dataMap[row][col].dataCommit(data)
@@ -95,7 +99,17 @@ class Window(Frame):
         labelMap[row][col] = dataMap[row][col].makeLabel()
         labelMap[row][col].grid(row=row, column=col)
 
-    #generates a new map based on given paramaters    (paramaters not yet implimented)   
+    #this uh.. yeah
+    def shutdown(self):
+        for row in range(75):
+            for col in range(75):
+                labelMap[row][col].grid_remove()
+        exit()
+        
+#------------------------------------------------------------------------------
+#generation menu commands
+
+    #generates a new map of randomly placed tile types
     def createNewGeneration(self):
         self.l.destroy()
         for row in range(75):
@@ -106,14 +120,21 @@ class Window(Frame):
                     self.updateTile(row, col, -1)
                 else:
                     self.updateTile(row, col, r)
-                        
-    #this uh.. yeah
-    def shutdown(self):
+                    
+    #wipes current grid out entirely and sets default message
+    def clearMap(self):
         for row in range(75):
             for col in range(75):
                 labelMap[row][col].grid_remove()
-        exit()
+        self.l = Label(text='Generate a fresh map', bg='grey30', fg='grey20', font=('helvetica', 30, 'bold'))
+        self.l.pack(expand=True)
+   
+#------------------------------------------------------------------------------
+#evolution menu commands     
+                            
 
+
+#app is created and run
 app=Window(root)
 root.mainloop()
 

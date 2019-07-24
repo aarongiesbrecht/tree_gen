@@ -9,8 +9,8 @@
 #base gui library
 from tkinter import *
 #helper gui libraries
-from PIL import Image
-from PIL import ImageTk
+#from PIL import Image
+#from PIL import ImageTk
 #utils
 from random import randint
 
@@ -25,18 +25,13 @@ class Tile():
         self.data=data
         self.newData=0
         self.oldData=0
-    #return tile coords
-    def getX(self):
-        return self.row
-    def getY(self):
-        return self.col
     #used by map to manage per tile data
-    def getStr(self):  
+    def makeLabel(self):  
         if (self.data == 0):
-            #self.strData = ''
+            self.strData = ''
             self.color = 'gray20'
         elif (self.data == 1):
-            #self.strData = ''
+            self.strData = ''
             self.color = 'gray40'
         elif (self.data == -1): #border data
             self.color = 'gray15'
@@ -49,12 +44,16 @@ class Tile():
     def dataPush(self):
         self.oldData=self.data
         self.data=self.newData
-    def oldCommit(self):
-        self.newData=self.oldData            
+    def getOldData(self):
+        return self.oldData         
 
 root=Tk()
 root.geometry('601x601')
 root.configure(bg='gray30')
+ #tile map
+dataMap = [[0 for x in range(75)] for x in range(75)]
+#label map
+labelMap = [[0 for x in range(75)] for x in range(75)]
 
 #for now map will have a static size definition
 
@@ -72,11 +71,6 @@ class Window(Frame):
         self.master.title('Tree Gen')
         self.l = Label(text='Generate a fresh map', bg='grey30', fg='grey20', font=('helvetica', 30, 'bold'))
         self.l.pack(expand=True)
-        
-        #tile map
-        dataMap = [[0 for x in range(75)] for x in range(75)]
-        #label map
-        labelMap = [[0 for x in range(75)] for x in range(75)]
         
         #base menu
         menu=Menu(self.master)
@@ -140,43 +134,40 @@ class Window(Frame):
     def clearMap(self):
         for row in range(75):
             for col in range(75):
-                self.map[row][col].getStr.grid_remove()
+                self.labelMap[row][col].grid_remove()
         self.l = Label(text='Generate a fresh map', bg='grey30', fg='grey20', font=('helvetica', 30, 'bold'))
         self.l.pack(expand=True)
     
     def undo(self):
         for row in range(75):
             for col in range(75):
-                self.map[row][col].oldCommit()
-                self.map[row][col].dataPush()
-                self.map[row][col].getStr.grid(row=row, column=col)
+                updateTile(row, col, self.dataMap[row][col].getOldData())
             
     #generates a new map based on given paramaters    (paramaters not yet implimented)   
     def createNewGeneration(self):
         self.l.destroy()
         for row in range(75):
             for col in range(75):
+                self.dataMap[row][col] = Tile(row, col, 0)
                 r=randint(0,1)
                 if (row < 2 or row > 72 or col < 2 or col > 72):
-                    self.map[row][col].dataCommit(-1)
-                    self.map[row][col].dataPush()
-                    self.map[row][col].getStr.grid(row=row, column=col)
+                    updateTile(row, col, -1)
                 else:
-                    if(r == 0):
-                        self.map[row][col].dataCommit(0)
-                        self.map[row][col].dataPush()
-                        self.map[row][col].getStr.grid(row=row, column=col)
-                    else:
-                        self.map[row][col].dataCommit(1)
-                        self.map[row][col].dataPush()
-                        self.map[row][col].getStr.grid(row=row, column=col)
- 
+                    updateTile(row, col, r)
+                        
+                        
+    def updateTile(self, row, col, data):
+        self.dataMap[row][col].dataCommit(data)
+        self.dataMap[row][col].dataPush()
+        self.labelMap[row][col].grid_remove()
+        self.labelMap[row][col] = self.dataMap[row][col].makeLabel()
+        self.labelMap[row][col].grid(row=row, column=col)
 
     #this uh.. yeah
     def shutdown(self):
         for row in range(75):
             for col in range(75):
-                self.map[row][col].getStr.grid_remove()
+                self.labelMap[row][col].grid_remove()
         exit()
 
 #local tools import last to avoid loops

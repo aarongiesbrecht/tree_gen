@@ -6,14 +6,9 @@
 # not intended to actually be efficient
 #
 
-#base gui library
+#external libraries
 from tkinter import *
-#helper gui libraries
-#from PIL import Image
-#from PIL import ImageTk
-#utils
 from random import randint
-
 
 #tile class
 class Tile():
@@ -25,7 +20,7 @@ class Tile():
         self.data=data
         self.newData=0
         self.oldData=0
-    #used by map to manage per tile data
+    #creates a new label, used during any tile update
     def makeLabel(self):  
         if (self.data == 0):
             self.strData = ''
@@ -36,9 +31,9 @@ class Tile():
         elif (self.data == -1): #border data
             self.color = 'gray15'
         return Label(text=self.strData, bg=self.color, font = ('helvetica', '1'), width=3, height=1)
+    #data managedment methods
     def getData(self):
         return self.data
-    #partner to above method
     def dataCommit(self, data):
         self.newData=data
     def dataPush(self):
@@ -47,14 +42,10 @@ class Tile():
     def getOldData(self):
         return self.oldData         
 
-root=Tk()
-root.geometry('525x525')
-root.configure(bg='gray30')
- #tile map
+#tile map
 dataMap = [[0 for x in range(75)] for x in range(75)]
 #label map
-tmp = Label(text='temp')
-labelMap = [[tmp for x in range(75)] for x in range(75)]
+labelMap = [[0 for x in range(75)] for x in range(75)]
 
 #for now map will have a static size definition
 
@@ -70,7 +61,8 @@ class Window(Frame):
     def initWindow(self):
         #sizing and title
         self.master.title('Tree Gen')
-        self.l = Label(text='Generate a fresh map', bg='grey30', fg='grey20', font=('helvetica', 30, 'bold'))
+        self.l = Label(text='Generate a fresh map', bg='grey30',
+                       fg='grey20', font=('helvetica', 30, 'bold'))
         self.l.pack(expand=True)
         
         #base menu
@@ -84,20 +76,29 @@ class Window(Frame):
         
         #generation menu
         gen=Menu(menu)
-        gen.add_command(label='Fresh Generation', command=self.createNewGeneration)
+        gen.add_command(label='Fresh Generation',
+                        command=self.createNewGeneration)
         gen.add_command(label='Clear Map', command=self.clearMap)
         menu.add_cascade(label='Generation', menu=gen)
 
 #------------------------------------------------------------------------------
 #utilities
     
-    #updates a tiles data and reprints
-    def updateTile(self, row, col, data):
+    #recreates a tiles data and reprints
+    def recreateTile(self, row, col, data):
         dataMap[row][col].dataCommit(data)
         dataMap[row][col].dataPush()
         labelMap[row][col].grid_remove()
         labelMap[row][col] = dataMap[row][col].makeLabel()
         labelMap[row][col].grid(row=row, column=col)
+        
+    #updates a tiles data and reprints
+    def updateTile(self, row, col):
+        dataMap[row][col].dataPush()
+        labelMap[row][col].grid_remove()
+        labelMap[row][col] = dataMap[row][col].makeLabel()
+        labelMap[row][col].grid(row=row, column=col)
+        
 
     #this uh.. yeah
     def shutdown(self):
@@ -117,9 +118,9 @@ class Window(Frame):
                 dataMap[row][col] = Tile(row, col, 0)
                 r=randint(0,1)
                 if (row < 2 or row > 72 or col < 2 or col > 72):
-                    self.updateTile(row, col, -1)
+                    self.recreateTile(row, col, -1)
                 else:
-                    self.updateTile(row, col, r)
+                    self.recreateTile(row, col, r)
                     
     #wipes current grid out entirely and sets default message
     def clearMap(self):
@@ -128,13 +129,27 @@ class Window(Frame):
                 labelMap[row][col].grid_remove()
         self.l = Label(text='Generate a fresh map', bg='grey30', fg='grey20', font=('helvetica', 30, 'bold'))
         self.l.pack(expand=True)
-   
+
 #------------------------------------------------------------------------------
 #evolution menu commands     
                             
+    def smooth(self):
+        #run an evolve check on all tiles
+        for row in range(0,74):
+            for col in range(0,74):
+                print('smoothed')
+                #smoothEvo(dataMap, row, col)
+        #update all tiles and reprint
+        for row in range(75):
+            for col in range(75):
+                updateTile(row, col)
+                
 
-
+#local imports
+from smooth import smoothEvo
 #app is created and run
-app=Window(root)
+root = Tk()
+root.geometry('525x525')
+root.configure(bg='gray30')
+app = Window(root)
 root.mainloop()
-

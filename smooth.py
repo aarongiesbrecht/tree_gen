@@ -6,10 +6,9 @@
 # 
 
 
-def smoothEvo(map, tile):
-    tile.getData()
-    x=tile.getX()
-    y=tile.getY()
+def smoothEvo(dataMap, row, col):
+    x=row
+    y=col
     waterCounter=0
     landCounter=0
     
@@ -20,17 +19,17 @@ def smoothEvo(map, tile):
             #lower evolution chance
             if (0 < row <= 73 and 0 < col <= 73 and
                 (row != x or col != y)): #do not count the tile being evaluated
-                    if (map.getData(row, col) == 1):
+                    if (dataMap[row][col].getData() == 1):
                         waterCounter += 1
-                    elif (map.getData(row, col) == 0):
+                    elif (dataMap[row][col].getData() == 0):
                         landCounter += 1
     
     #if a tile is neighbored by 50% water it floods and becomes water         
     if (waterCounter > 5):
-        tile.dataCommit(1)   
+        dataMap[x][y].dataCommit(1)   
     if (landCounter > 5):
-        tile.dataCommit(0)
+        dataMap[x][y].dataCommit(0)
 
 
 #imported after to avoid import loop that took me 10 long minutes to realize    
-from tree_gen import Tile, Map
+#from main import Tile, dataMap

@@ -1,33 +1,36 @@
 from tkinter import *
+
+class Window(Frame):
+    def __init__(self, master):
+        Frame.__init__(self, master)
+        #master refers to main window
+        self.master = master
+        self.initWindow()
+        
+
+    def initWindow(self):
+        #sizing and title
+        self.master.title('Tree Gen')
+        self.l = Label(text='Generate a fresh map', bg='grey30',
+                       fg='grey20', font=('helvetica', 30, 'bold'))
+        self.l.pack(expand=True)
+        
+        #base menu
+        menu=Menu(self.master)
+        self.master.config(menu=menu)
+        
+        #file menu creation
+        file=Menu(menu)
+        file.add_command(label='Close and Exit', command=self.shutdown)
+        menu.add_cascade(label='File', menu=file)
+        
+    def shutdown(self):
+        exit()
+        
+        
+from smooth import smoothEvo
 root = Tk()
-root.geometry('700x700')
-
-class Tile:
-    def __init__(self, x, y, data):
-        self.x=x
-        self.y=y
-        self.data=data
-    def getData(self):
-        return self.data
-    def getLabel(self):
-        return Label(text='[{},{}]'.format(self.x, self.y))
-
-#tile array
-t = [[0 for x in range(75)] for x in range(75)]
-#label array
-l  = [[0 for x in range(75)] for x in range(75)]
-
-for x in range(75):
-    for y in range(75):
-        t[x][y] = Tile(x,y,0)
-        l[x][y] = t[x][y].getLabel()
-        l[x][y].grid(row=x,column=y)
-'''
-for x in range(75):
-    for y in range(75):
-        l[x][y].grid_remove()  
-  
-l = Label(text='Generate a fresh map', bg='grey30', fg='grey20')
-l.pack(expand=True)    '''
-
+root.geometry('500x500')
+root.config(bg='gray30')
+app = Window(root)
 root.mainloop()

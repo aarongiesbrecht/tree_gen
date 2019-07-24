@@ -28,4 +28,4 @@ def floodEvo(map, tile):
 
 
 #imported after to avoid import loop that took me 10 long minutes to realize    
-from tree_gen import Tile, Map
+from tree_gen import Tile

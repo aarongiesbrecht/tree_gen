@@ -6,7 +6,7 @@
 # 
 
 
-def smoothEvo(dataMap, row, col):
+def smoothOne(dataMap, row, col):
     x=row
     y=col
     waterCounter=0
@@ -25,11 +25,13 @@ def smoothEvo(dataMap, row, col):
                         landCounter += 1
     
     #if a tile is neighbored by 50% water it floods and becomes water         
-    if (waterCounter > 5):
-        dataMap[x][y].dataCommit(1)   
+    if (waterCounter > 3):
+        return 1
     if (landCounter > 5):
-        dataMap[x][y].dataCommit(0)
+        return 1
 
+def smoothTwo(dataMap, row, col):
+    return 1
 
-#imported after to avoid import loop that took me 10 long minutes to realize    
-#from main import Tile, dataMap
+def smoothThree(dataMap, row, col):
+    return 1

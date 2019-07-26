@@ -81,6 +81,12 @@ class Window(Frame):
         gen.add_command(label='Clear Map', command=self.clearMap)
         menu.add_cascade(label='Generation', menu=gen)
 
+        #transformation menu
+        transform=Menu(menu)
+        transform.add_command(label='Smooth', command=self.smooth)
+        menu.add_cascade(label='Transformation', menu=transform)
+        
+
 #------------------------------------------------------------------------------
 #utilities
     
@@ -88,7 +94,8 @@ class Window(Frame):
     def recreateTile(self, row, col, data):
         dataMap[row][col].dataCommit(data)
         dataMap[row][col].dataPush()
-        labelMap[row][col].grid_remove()
+        if (labelMap[row][col] != 0):
+            labelMap[row][col].grid_remove()
         labelMap[row][col] = dataMap[row][col].makeLabel()
         labelMap[row][col].grid(row=row, column=col)
         
@@ -104,7 +111,8 @@ class Window(Frame):
     def shutdown(self):
         for row in range(75):
             for col in range(75):
-                labelMap[row][col].grid_remove()
+                if (labelMap[row][col] != 0):
+                    labelMap[row][col].grid_remove()
         exit()
         
 #------------------------------------------------------------------------------
@@ -137,16 +145,19 @@ class Window(Frame):
         #run an evolve check on all tiles
         for row in range(0,74):
             for col in range(0,74):
-                print('smoothed')
-                #smoothEvo(dataMap, row, col)
+                dataMap[row][col].dataCommit(smoothOne(dataMap, row, col))
+                #smoothOne(dataMap, row, col)
         #update all tiles and reprint
+        #it is important to reprint after all tiles have been smoothed
         for row in range(75):
             for col in range(75):
-                updateTile(row, col)
+                self.updateTile(row, col)
                 
 
 #local imports
-from smooth import smoothEvo
+from smooth import smoothOne
+from smooth import smoothTwo
+from smooth import smoothThree
 #app is created and run
 root = Tk()
 root.geometry('525x525')

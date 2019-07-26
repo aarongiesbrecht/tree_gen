@@ -26,6 +26,3 @@ def droughtEvo(map, tile):
     if (landCounter > 5):
         tile.dataCommit(0)   
 
-
-#imported after to avoid import loop that took me 10 long minutes to realize    
-from tree_gen import Tile

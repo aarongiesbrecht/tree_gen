@@ -83,7 +83,11 @@ class Window(Frame):
 
         #transformation menu
         transform=Menu(menu)
-        transform.add_command(label='Smooth', command=self.smooth)
+        smooth=Menu(menu)
+        smooth.add_command(label='Smooth Level 1', command=self.smoothOne)
+        smooth.add_command(label='Smooth Level 2', command=self.smoothTwo)
+        smooth.add_command(label='Smooth Level 3', command=self.smoothThree)
+        transform.add_cascade(label='smooth', menu=smooth)
         menu.add_cascade(label='Transformation', menu=transform)
         
 
@@ -141,11 +145,35 @@ class Window(Frame):
 #------------------------------------------------------------------------------
 #evolution menu commands     
                             
-    def smooth(self):
+    def smoothOne(self):
         #run an evolve check on all tiles
         for row in range(0,74):
             for col in range(0,74):
                 dataMap[row][col].dataCommit(smoothOne(dataMap, row, col))
+                #smoothOne(dataMap, row, col)
+        #update all tiles and reprint
+        #it is important to reprint after all tiles have been smoothed
+        for row in range(75):
+            for col in range(75):
+                self.updateTile(row, col)
+                
+    def smoothTwo(self):
+        #run an evolve check on all tiles
+        for row in range(0,74):
+            for col in range(0,74):
+                dataMap[row][col].dataCommit(smoothTwo(dataMap, row, col))
+                #smoothOne(dataMap, row, col)
+        #update all tiles and reprint
+        #it is important to reprint after all tiles have been smoothed
+        for row in range(75):
+            for col in range(75):
+                self.updateTile(row, col)
+                
+    def smoothThree(self):
+        #run an evolve check on all tiles
+        for row in range(0,74):
+            for col in range(0,74):
+                dataMap[row][col].dataCommit(smoothThree(dataMap, row, col))
                 #smoothOne(dataMap, row, col)
         #update all tiles and reprint
         #it is important to reprint after all tiles have been smoothed

@@ -6,10 +6,9 @@
 # 
 
 
-def droughtEvo(map, tile):
-    tile.getData()
-    x=tile.getX()
-    y=tile.getY()
+def darkenOne(dataMap, row, col):
+    x=row
+    y=col
     landCounter=0
     
     #cycle through the neighbors of the evolving tile
@@ -17,12 +16,12 @@ def droughtEvo(map, tile):
         for col in range(y-1, y+2):
             #if a tile is on the edge of the map it will have a proportionally
             #lower evolution chance
-            if (0 < row <= 74 and 0 < col <= 74 and
+            if (0 < row <= 73 and 0 < col <= 73 and
                 (row != x or col != y)): #do not count the tile being evaluated
-                    if (map.getData(row, col) == 1):
+                    if (dataMap[row][col].getData() == 0):
                         landCounter += 1
     
-    #if a tile is neighbored by 50% land it floods and becomes land         
-    if (landCounter > 5):
-        tile.dataCommit(0)   
+    #if a tile is neighbored by 50% water it floods and becomes water         
+    if (landCounter > 4):
+        return 0
 

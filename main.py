@@ -78,16 +78,23 @@ class Window(Frame):
         gen=Menu(menu)
         gen.add_command(label='Fresh Generation',
                         command=self.createNewGeneration)
+        gen.add_command(label='Dark Generation',
+                        command=self.createDarkGeneration)
+        gen.add_command(label='Light Generation',
+                        command=self.createLightGeneration)
         gen.add_command(label='Clear Map', command=self.clearMap)
         menu.add_cascade(label='Generation', menu=gen)
 
         #transformation menu
         transform=Menu(menu)
         smooth=Menu(menu)
-        smooth.add_command(label='Smooth Level 1', command=self.smoothOne)
-        smooth.add_command(label='Smooth Level 2', command=self.smoothTwo)
-        smooth.add_command(label='Smooth Level 3', command=self.smoothThree)
+        smooth.add_command(label='Smooth Radius 1', command=self.smoothOne)
+        smooth.add_command(label='Smooth Radius 2', command=self.smoothTwo)
+        smooth.add_command(label='Smooth Radius 3', command=self.smoothThree)
         transform.add_cascade(label='smooth', menu=smooth)
+        darken=Menu(menu)
+        darken.add_command(label='Darken Radius 1', command=self.darkenOne)
+        transform.add_cascade(label='Darken', menu=darken)
         menu.add_cascade(label='Transformation', menu=transform)
         
 
@@ -134,6 +141,36 @@ class Window(Frame):
                 else:
                     self.recreateTile(row, col, r)
                     
+    #generates a new dark map
+    def createDarkGeneration(self):
+        self.l.destroy()
+        for row in range(75):
+            for col in range(75):
+                dataMap[row][col] = Tile(row, col, 0)
+                r=randint(0,10)
+                if (row < 2 or row > 72 or col < 2 or col > 72):
+                    self.recreateTile(row, col, -1)
+                else:
+                    if (r < 7):
+                        self.recreateTile(row, col, 0)
+                    else:
+                        self.recreateTile(row, col, 1)
+                        
+    #generates a new light map
+    def createLightGeneration(self):
+        self.l.destroy()
+        for row in range(75):
+            for col in range(75):
+                dataMap[row][col] = Tile(row, col, 0)
+                r=randint(0,10)
+                if (row < 2 or row > 72 or col < 2 or col > 72):
+                    self.recreateTile(row, col, -1)
+                else:
+                    if (r < 4):
+                        self.recreateTile(row, col, 0)
+                    else:
+                        self.recreateTile(row, col, 1)
+
     #wipes current grid out entirely and sets default message
     def clearMap(self):
         for row in range(75):
@@ -144,48 +181,61 @@ class Window(Frame):
 
 #------------------------------------------------------------------------------
 #evolution menu commands     
-                            
+    
+    #smoothing based on r=1 neighbors                    
     def smoothOne(self):
         #run an evolve check on all tiles
         for row in range(0,74):
             for col in range(0,74):
                 dataMap[row][col].dataCommit(smoothOne(dataMap, row, col))
-                #smoothOne(dataMap, row, col)
         #update all tiles and reprint
         #it is important to reprint after all tiles have been smoothed
         for row in range(75):
             for col in range(75):
                 self.updateTile(row, col)
                 
+    #smoothing based on r=2 neighbors            
     def smoothTwo(self):
         #run an evolve check on all tiles
         for row in range(0,74):
             for col in range(0,74):
                 dataMap[row][col].dataCommit(smoothTwo(dataMap, row, col))
-                #smoothOne(dataMap, row, col)
         #update all tiles and reprint
         #it is important to reprint after all tiles have been smoothed
         for row in range(75):
             for col in range(75):
                 self.updateTile(row, col)
-                
+    
+    #smoothing based on r=3 neighbors            
     def smoothThree(self):
         #run an evolve check on all tiles
         for row in range(0,74):
             for col in range(0,74):
                 dataMap[row][col].dataCommit(smoothThree(dataMap, row, col))
-                #smoothOne(dataMap, row, col)
         #update all tiles and reprint
         #it is important to reprint after all tiles have been smoothed
         for row in range(75):
             for col in range(75):
                 self.updateTile(row, col)
                 
-
+    def darkenOne(self):
+        #run an evolve check on all tiles
+        for row in range(0,74):
+            for col in range(0,74):
+                dataMap[row][col].dataCommit(darkenOne(dataMap, row, col))
+        #update all tiles and reprint
+        #it is important to reprint after all tiles have been smoothed
+        for row in range(75):
+            for col in range(75):
+                self.updateTile(row, col)
+        
+    
 #local imports
 from smooth import smoothOne
 from smooth import smoothTwo
 from smooth import smoothThree
+from darken import darkenOne
+
 #app is created and run
 root = Tk()
 root.geometry('525x525')

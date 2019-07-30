@@ -76,7 +76,7 @@ class Window(Frame):
         
         #generation menu
         gen=Menu(menu)
-        gen.add_command(label='Fresh Generation',
+        gen.add_command(label='Even Generation',
                         command=self.createNewGeneration)
         gen.add_command(label='Dark Generation',
                         command=self.createDarkGeneration)
@@ -94,6 +94,8 @@ class Window(Frame):
         transform.add_cascade(label='smooth', menu=smooth)
         darken=Menu(menu)
         darken.add_command(label='Darken Radius 1', command=self.darkenOne)
+        darken.add_command(label='Darken Radius 2', command=self.darkenTwo)
+        darken.add_command(label='Darken Radius 3', command=self.darkenThree)
         transform.add_cascade(label='Darken', menu=darken)
         menu.add_cascade(label='Transformation', menu=transform)
         
@@ -182,7 +184,7 @@ class Window(Frame):
 #------------------------------------------------------------------------------
 #evolution menu commands     
     
-    #smoothing based on r=1 neighbors                    
+    #smoothing based on r=1->3 neighbors                 
     def smoothOne(self):
         #run an evolve check on all tiles
         for row in range(0,74):
@@ -193,8 +195,7 @@ class Window(Frame):
         for row in range(75):
             for col in range(75):
                 self.updateTile(row, col)
-                
-    #smoothing based on r=2 neighbors            
+                          
     def smoothTwo(self):
         #run an evolve check on all tiles
         for row in range(0,74):
@@ -205,8 +206,7 @@ class Window(Frame):
         for row in range(75):
             for col in range(75):
                 self.updateTile(row, col)
-    
-    #smoothing based on r=3 neighbors            
+                
     def smoothThree(self):
         #run an evolve check on all tiles
         for row in range(0,74):
@@ -217,12 +217,35 @@ class Window(Frame):
         for row in range(75):
             for col in range(75):
                 self.updateTile(row, col)
-                
+     
+    #darkening based on r=1->3 neighbors           
     def darkenOne(self):
         #run an evolve check on all tiles
         for row in range(0,74):
             for col in range(0,74):
                 dataMap[row][col].dataCommit(darkenOne(dataMap, row, col))
+        #update all tiles and reprint
+        #it is important to reprint after all tiles have been smoothed
+        for row in range(75):
+            for col in range(75):
+                self.updateTile(row, col)
+                
+    def darkenTwo(self):
+        #run an evolve check on all tiles
+        for row in range(0,74):
+            for col in range(0,74):
+                dataMap[row][col].dataCommit(darkenTwo(dataMap, row, col))
+        #update all tiles and reprint
+        #it is important to reprint after all tiles have been smoothed
+        for row in range(75):
+            for col in range(75):
+                self.updateTile(row, col)
+                
+    def darkenThree(self):
+        #run an evolve check on all tiles
+        for row in range(0,74):
+            for col in range(0,74):
+                dataMap[row][col].dataCommit(darkenThree(dataMap, row, col))
         #update all tiles and reprint
         #it is important to reprint after all tiles have been smoothed
         for row in range(75):
@@ -235,6 +258,8 @@ from smooth import smoothOne
 from smooth import smoothTwo
 from smooth import smoothThree
 from darken import darkenOne
+from darken import darkenTwo
+from darken import darkenThree
 
 #app is created and run
 root = Tk()
